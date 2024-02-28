@@ -132,21 +132,11 @@ function handleDelete(id, todoType) {
 function handleEdit(id) {
     const { myTodos } = grabTodos();
     todoForm.style.display =
-        !todoForm.style.display.length || todoForm.style.display === "none"
-            ? "block"
-            : "none";
-    todoBtn.style.display =
-        !todoBtn.style.display.length || todoBtn.style.display === "none"
-            ? "block"
-            : "none";
+        todoForm.style.display === "none" ? "block" : "none";
+    todoBtn.style.display = todoBtn.style.display === "none" ? "block" : "none";
     editForm.style.display =
-        !editForm.style.display.length || editForm.style.display === "flex"
-            ? "none"
-            : "flex";
-    editBtn.style.display =
-        !editBtn.style.display.length || editBtn.style.display === "flex"
-            ? "none"
-            : "flex";
+        editForm.style.display === "flex" ? "none" : "flex";
+    editBtn.style.display = editBtn.style.display === "flex" ? "none" : "flex";
     editFormInput.placeholder = myTodos[id];
     editFormInput.value = "";
     if (!editForm.classList.contains(`edit-todo-${id}`)) {
