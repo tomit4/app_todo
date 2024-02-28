@@ -156,7 +156,7 @@ function handleEdit(id) {
 function handleEditSubmit(event) {
     event.preventDefault();
     const { myTodos } = grabTodos();
-    const id = this.classList[0].split("-")[2];
+    const id = this.classList[this.classList.length - 1].split("-")[2];
     const inputValueIsNotBlank = !editFormInput.value.match(/^\s*$/);
     if (inputValueIsNotBlank) {
         myTodos[id] = editFormInput.value;
