@@ -2,14 +2,22 @@ const todoForm = document.getElementById("todo-form-container");
 const todoInput = document.getElementById("todo-input");
 const todoBtn = document.getElementById("add-todo-btn");
 const todoList = document.getElementById("todo-list");
+const doneList = document.getElementById("done-list");
+const todoHeader = document.getElementById("todo-header");
+const doneHeader = document.getElementById("done-header");
 
 function grabTodos() {
     let myTodos = [];
-    const myLocallyStoredTodos = localStorage.getItem("todos");
+    let myDone = [];
+    const myLocallyStoredTodos = localStorage.getItem("todo");
+    const myLocallyStoredDone = localStorage.getItem("done");
     if (myLocallyStoredTodos !== null) {
         myTodos = JSON.parse(myLocallyStoredTodos);
     }
-    return myTodos;
+    if (myLocallyStoredDone !== null) {
+        myDone = JSON.parse(myLocallyStoredDone);
+    }
+    return { myTodos, myDone };
 }
 
 function createCheckBox(id) {
@@ -25,11 +33,12 @@ function createCheckBox(id) {
     return { checkbox, label };
 }
 
-function createBtn(id, type) {
+function createBtn(id, todoType, btnType) {
     const btn = document.createElement("button");
-    btn.id = `todo-${type}-btn-${id}`;
     const icon = document.createElement("i");
-    icon.classList.add(`${type}-icon`);
+    btn.addEventListener("click", handleBtnClick);
+    btn.id = `${todoType}-${btnType}-btn-${id}`;
+    icon.classList.add(`${btnType}-icon`);
     btn.appendChild(icon);
     return btn;
 }
@@ -38,10 +47,10 @@ function generateTodo(myTodos) {
     for (let i = 0; i < myTodos.length; i++) {
         const newTodo = document.createElement("li");
         const newTodoSpan = document.createElement("span");
-        const delBtn = createBtn(i, "del");
-        const editBtn = createBtn(i, "edit");
+        const delBtn = createBtn(i, "todo", "del");
+        const editBtn = createBtn(i, "todo", "edit");
         const { checkbox, label } = createCheckBox(i);
-        newTodo.id = `todo-${i + 1}`;
+        newTodo.id = `todo-${i}`;
         newTodoSpan.textContent = myTodos[i];
         newTodo.appendChild(newTodoSpan);
         newTodoSpan.appendChild(checkbox);
@@ -52,36 +61,75 @@ function generateTodo(myTodos) {
     }
 }
 
+function generateDone(myDone) {
+    for (let i = 0; i < myDone.length; i++) {
+        const newDone = document.createElement("li");
+        const newDoneSpan = document.createElement("span");
+        const delBtn = createBtn(i, "done", "del");
+        newDone.id = `done-${i}`;
+        newDoneSpan.textContent = myDone[i];
+        newDone.appendChild(newDoneSpan);
+        newDoneSpan.appendChild(delBtn);
+        doneList.appendChild(newDone);
+    }
+}
+
 function renderTodos() {
-    const myTodos = grabTodos();
+    const { myTodos, myDone } = grabTodos();
     todoList.replaceChildren();
+    doneList.replaceChildren();
     if (myTodos.length > 0) {
-        myTodos.reverse();
         generateTodo(myTodos);
     }
+    if (myDone.length > 0) {
+        generateDone(myDone);
+    }
+    setHeaders();
 }
 
 function handleSubmit(event) {
     event.preventDefault();
-    const myTodos = grabTodos();
+    const { myTodos } = grabTodos();
     const inputValueIsNotBlank = !todoInput.value.match(/^\s*$/);
     if (inputValueIsNotBlank) {
-        myTodos.push(todoInput.value);
+        myTodos.unshift(todoInput.value);
     }
-    localStorage.setItem("todos", JSON.stringify(myTodos));
+    // TODO: add else clause to render error message to user
+    localStorage.setItem("todo", JSON.stringify(myTodos));
     todoInput.value = "";
     renderTodos();
 }
 
 function handleCheckBoxChange() {
     if (this.checked) {
-        const myTodos = grabTodos();
-        myTodos.reverse();
+        const { myTodos, myDone } = grabTodos();
         const todoId = Number(this.id.split("-")[2]);
+        myDone.unshift(myTodos[todoId]);
         myTodos.splice(todoId, 1);
-        localStorage.setItem("todos", JSON.stringify(myTodos.reverse()));
+        localStorage.setItem("todo", JSON.stringify(myTodos));
+        localStorage.setItem("done", JSON.stringify(myDone));
         renderTodos();
     }
+}
+
+function handleBtnClick() {
+    const { myTodos, myDone } = grabTodos();
+    const todoType = this.id.split("-")[0];
+    const id = Number(this.id.split("-")[3]);
+    if (todoType === "todo") {
+        myTodos.splice(id, 1);
+        localStorage.setItem("todo", JSON.stringify(myTodos));
+    } else if (todoType === "done") {
+        myDone.splice(id, 1);
+        localStorage.setItem("done", JSON.stringify(myDone));
+    }
+    renderTodos();
+}
+
+function setHeaders() {
+    const { myTodos, myDone } = grabTodos();
+    todoHeader.textContent = myTodos.length === 0 ? "" : "Todo";
+    doneHeader.textContent = myDone.length === 0 ? "" : "Done";
 }
 
 function main() {
