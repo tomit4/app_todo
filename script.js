@@ -1,6 +1,9 @@
 const todoForm = document.getElementById("todo-form-container");
-const todoInput = document.getElementById("todo-input");
 const todoBtn = document.getElementById("add-todo-btn");
+const editForm = document.getElementById("edit-todo-form-container");
+const editFormInput = document.getElementById("edit-todo-input");
+const editBtn = document.getElementById("edit-todo-btn");
+const todoInput = document.getElementById("todo-input");
 const todoList = document.getElementById("todo-list");
 const doneList = document.getElementById("done-list");
 const todoHeader = document.getElementById("todo-header");
@@ -52,6 +55,7 @@ function generateTodo(myTodos) {
         const { checkbox, label } = createCheckBox(i);
         newTodo.id = `todo-${i}`;
         newTodoSpan.textContent = myTodos[i];
+        newTodoSpan.id = `todo-span-${i}`;
         newTodo.appendChild(newTodoSpan);
         newTodoSpan.appendChild(checkbox);
         newTodoSpan.appendChild(label);
@@ -68,6 +72,7 @@ function generateDone(myDone) {
         const delBtn = createBtn(i, "done", "del");
         newDone.id = `done-${i}`;
         newDoneSpan.textContent = myDone[i];
+        newDoneSpan.id = `done-span-${i}`;
         newDone.appendChild(newDoneSpan);
         newDoneSpan.appendChild(delBtn);
         doneList.appendChild(newDone);
@@ -123,10 +128,43 @@ function handleDelete(id, todoType) {
     }
 }
 
-// TODO: render edit form and change todo list
+// TODO: Refactor
 function handleEdit(id) {
-    // const { myTodos, myDone } = grabTodos();
-    // localStorage.setItem("todo", JSON.stringify(myTodos));
+    const { myTodos } = grabTodos();
+    todoForm.style.display =
+        !todoForm.style.display.length || todoForm.style.display === "none"
+            ? "block"
+            : "none";
+    todoBtn.style.display =
+        !todoBtn.style.display.length || todoBtn.style.display === "none"
+            ? "block"
+            : "none";
+    editForm.style.display =
+        !editForm.style.display.length || editForm.style.display === "flex"
+            ? "none"
+            : "flex";
+    editBtn.style.display =
+        !editBtn.style.display.length || editBtn.style.display === "flex"
+            ? "none"
+            : "flex";
+    editFormInput.placeholder = myTodos[id];
+    editFormInput.value = "";
+    editForm.classList.add(`edit-todo-${id}`);
+    editBtn.classList.add(`edit-todo-${id}`);
+}
+
+function handleEditSubmit(event) {
+    event.preventDefault();
+    const { myTodos } = grabTodos();
+    const id = this.classList[0].split("-")[2];
+    const inputValueIsNotBlank = !editFormInput.value.match(/^\s*$/);
+    if (inputValueIsNotBlank) {
+        myTodos[id] = editFormInput.value;
+        localStorage.setItem("todo", JSON.stringify(myTodos));
+        editFormInput.value = "";
+        todoInput.value = "";
+        renderTodos();
+    }
 }
 
 function handleBtnClick() {
@@ -148,8 +186,14 @@ function setHeaders() {
 }
 
 function main() {
+    todoForm.style.display = "block";
+    todoBtn.style.display = "block";
+    editForm.style.display = "none";
+    editBtn.style.display = "none";
     todoForm.addEventListener("submit", handleSubmit);
     todoBtn.addEventListener("click", handleSubmit);
+    editForm.addEventListener("submit", handleEditSubmit);
+    editBtn.addEventListener("click", handleEditSubmit);
     renderTodos();
 }
 
