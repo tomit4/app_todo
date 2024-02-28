@@ -155,6 +155,7 @@ function handleEditSubmit(event) {
     if (inputValueIsNotBlank) {
         myTodos[id] = editFormInput.value;
         localStorage.setItem("todo", JSON.stringify(myTodos));
+        editFormInput.placeholder = myTodos[id];
         editFormInput.value = "";
         todoInput.value = "";
         renderTodos();
