@@ -112,16 +112,31 @@ function handleCheckBoxChange() {
     }
 }
 
-function handleBtnClick() {
+function handleDelete(id, todoType) {
     const { myTodos, myDone } = grabTodos();
-    const todoType = this.id.split("-")[0];
-    const id = Number(this.id.split("-")[3]);
     if (todoType === "todo") {
         myTodos.splice(id, 1);
         localStorage.setItem("todo", JSON.stringify(myTodos));
     } else if (todoType === "done") {
         myDone.splice(id, 1);
         localStorage.setItem("done", JSON.stringify(myDone));
+    }
+}
+
+// TODO: render edit form and change todo list
+function handleEdit(id) {
+    // const { myTodos, myDone } = grabTodos();
+    // localStorage.setItem("todo", JSON.stringify(myTodos));
+}
+
+function handleBtnClick() {
+    const todoType = this.id.split("-")[0];
+    const btnType = this.id.split("-")[1];
+    const id = Number(this.id.split("-")[3]);
+    if (btnType === "del") {
+        handleDelete(id, todoType);
+    } else if (btnType === "edit") {
+        handleEdit(id);
     }
     renderTodos();
 }
