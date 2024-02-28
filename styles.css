@@ -156,7 +156,7 @@ textarea {
     background-color: #fff;
 }
 
-.edit-todo-button:hover,
+#edit-todo-btn:hover,
 .todo-button:hover {
     scale: 1.1;
 }
