@@ -149,8 +149,12 @@ function handleEdit(id) {
             : "flex";
     editFormInput.placeholder = myTodos[id];
     editFormInput.value = "";
-    editForm.classList.add(`edit-todo-${id}`);
-    editBtn.classList.add(`edit-todo-${id}`);
+    if (!editForm.classList.contains(`edit-todo-${id}`)) {
+        editForm.classList.add(`edit-todo-${id}`);
+    }
+    if (!editBtn.classList.contains(`edit-todo-${id}`)) {
+        editBtn.classList.add(`edit-todo-${id}`);
+    }
 }
 
 function handleEditSubmit(event) {
