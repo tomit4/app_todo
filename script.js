@@ -19,6 +19,7 @@ function createCheckBox(id) {
     checkbox.name = "todo-check";
     checkbox.value = "value";
     checkbox.id = `todo-check-${id}`;
+    checkbox.addEventListener("change", handleCheckBoxChange);
     label.htmlFor = "todo-check";
     label.id = `todo-label-${id}`;
     return { checkbox, label };
@@ -53,8 +54,8 @@ function generateTodo(myTodos) {
 
 function renderTodos() {
     const myTodos = grabTodos();
+    todoList.replaceChildren();
     if (myTodos.length > 0) {
-        todoList.replaceChildren();
         myTodos.reverse();
         generateTodo(myTodos);
     }
@@ -70,6 +71,17 @@ function handleSubmit(event) {
     localStorage.setItem("todos", JSON.stringify(myTodos));
     todoInput.value = "";
     renderTodos();
+}
+
+function handleCheckBoxChange() {
+    if (this.checked) {
+        const myTodos = grabTodos();
+        myTodos.reverse();
+        const todoId = Number(this.id.split("-")[2]);
+        myTodos.splice(todoId, 1);
+        localStorage.setItem("todos", JSON.stringify(myTodos.reverse()));
+        renderTodos();
+    }
 }
 
 function main() {
