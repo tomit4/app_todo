@@ -33,6 +33,26 @@ textarea {
     min-width: 0;
 }
 
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container > h1 {
+    margin: 1em auto -0.0125em auto;
+    text-align: center;
+}
+
+.form-container > #todo-list,
+.form-container > #done-list {
+    list-style: none;
+    width: 100%;
+    max-width: 18em;
+    padding: 0;
+}
+
 #edit-todo-form-container,
 #edit-todo-btn {
     display: none;
@@ -68,26 +88,6 @@ textarea {
     height: 2.75em;
     font-weight: 600;
     font-size: 80%;
-}
-
-.todo-form-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.todo-form-container > h1 {
-    margin: 1em auto -0.0125em auto;
-    text-align: center;
-}
-
-.todo-form-container > #todo-list,
-.todo-form-container > #done-list {
-    list-style: none;
-    width: 100%;
-    max-width: 18em;
-    padding: 0;
 }
 
 #todo-header,
