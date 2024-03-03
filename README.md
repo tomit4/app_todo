@@ -1,6 +1,9 @@
-## App ToDo
+<div align="center">
+    <img src="https://github.com/tomit4/app_todo/blob/main/assets/app_todo_logo.png">
+</div>
 
-### A Simple ToDo Application
+<h1 align="center">App ToDo</h1>
+<h2 align="center">A Simple ToDo Application</h2>
 
 This simple application is meant to demonstrate the basics of HTML, CSS, and
 JavaScript for educational purposes. App Todo demonstrates essentials to how to
